@@ -1,3 +1,5 @@
+import java.util.LinkedHashSet;
+import java.util.*;
 import java.util.Stack;
 
 public class Stack_PA {
@@ -62,16 +64,15 @@ public class Stack_PA {
     * final stack ==> [4, 6, 7, 2]
     */
    public static int removeDuplicates(Stack<Integer> stacks) {
+     
       Stack<Integer> tempStack = new Stack<>();
-      Stack<Integer> reversedStack = new Stack<>();
+      Stack<Integer> reversedStack = reverse(stacks);
       int dupeCount = 0;
 
       // reverses the stack, maintaining a LIFO order
       // so if there are dupes, the dupe closest to the top of the original stack 
       // is removed
       //original stack is now empty
-      while(!stacks.isEmpty()) reversedStack.push(stacks.pop());
-      
       //goes one-by-one in the reversed stack
       while (!reversedStack.isEmpty()) {
          int currInt = reversedStack.pop();
@@ -94,7 +95,7 @@ public class Stack_PA {
          //so (currInt) is unique and we can move on to the next (int)
 
          //adds back to reversedStack for another iteration
-         while(!tempStack.isEmpty()) reversedStack.push(tempStack.pop());
+         reversedStack = reverse(tempStack);
 
          //iterates back to check the (int) that was after (or below) the current (currInt)
          //in respect to reversedStack
@@ -115,17 +116,14 @@ public class Stack_PA {
     */
    public static void removeFirstOccurrence(Stack<Integer> stack, int element) {
       int count = 0;
-      Stack<Integer> tempStack = new Stack<>();
-      while (!stack.isEmpty()) {
-         tempStack.push(stack.pop());
-      }
-      while (!tempStack.isEmpty()) {
-         int currInt = tempStack.peek();
+      Stack<Integer> reverseStack = reverse(stack);
+      while (!reverseStack.isEmpty()) {
+         int currInt = reverseStack.peek();
          if (currInt == element && count != 1) {
-            tempStack.pop();
+            reverseStack.pop();
             count++;
          } else
-            stack.push(tempStack.pop());
+            stack.push(reverseStack.pop());
       }
    }
 
@@ -141,10 +139,8 @@ public class Stack_PA {
     * the other elements in the stack in the same relative order
     */
    public static void removeAllOccurrences(Stack<String> stack, String element) {
-      Stack<String> tempStack = new Stack<>();
-      while (!stack.isEmpty()) {
-         tempStack.push(stack.pop());
-      }
+      Stack<String> tempStack = reverse(stack);
+      
       while (!tempStack.isEmpty()) {
          String currString = tempStack.peek();
          if (currString.equals(element))
@@ -154,8 +150,28 @@ public class Stack_PA {
       }
    }
 
+   public static <E> Stack<E> reverse(Stack<E> stack){
+      Stack<E> tempStack = new Stack<>();
+      while(!stack.isEmpty()){
+         tempStack.push(stack.pop());
+      }
+      return tempStack;
+   }
    /****************** Testing **********************************/
    public static void main(String[] args) {
+      // Stack<Integer> list = new Stack<>();
+      // list.add(1);
+      // list.add(2);
+      // list.add(5);
+      // list.add(3);
+      // list.add(4);
+      // list.add(6);
+      // list.add(2);
+      // list.add(77);
+      // System.out.println(list);
+      // removeDuplicates(list);
+      // System.out.println(list);
+
       System.out.println("********** Sum Stack Output *********");
       // Creating a Stack
       Stack<Integer> numbers = new Stack<Integer>();
@@ -258,6 +274,5 @@ public class Stack_PA {
       removeAllOccurrences(list2, "C");
       System.out.println("Element \"C\" removed - Stack => " + list2);
       System.out.println();
-
    }
 }
